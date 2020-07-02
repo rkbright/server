@@ -1,5 +1,5 @@
 // Package main //server-build
-package main
+package build
 
 import (
 	"fmt"
