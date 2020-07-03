@@ -29,5 +29,6 @@ func Runfile() string {
 
 // Native function to call Linux command
 func Native() int {
+
 	return 0
 }
