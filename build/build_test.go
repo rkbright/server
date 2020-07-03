@@ -6,6 +6,7 @@ import (
 	"testing"
 )
 
+// TestBuild function
 func TestBuild(t *testing.T) {
 	got := build.Runfile()
 	want := "You successfully ran a Linux command from Go!!!" + "\n"
@@ -13,5 +14,15 @@ func TestBuild(t *testing.T) {
 
 	if got != want {
 		t.Errorf("got %q, want %q, test %q", got, want, test)
+	}
+}
+
+// TestNative function
+func TestNative(t *testing.T) {
+	got := build.Native()
+	want := 0
+
+	if got != want {
+		t.Errorf("want %q, got %q", want, got)
 	}
 }
