@@ -6,14 +6,14 @@ import (
 	"os/exec"
 )
 
-// Runfile function to run Linux command
+// Runfile function to execute Linux command
 func Runfile() string {
 
-	// command and input
+	// command and input string
 	cmd, input := "echo", "You successfully ran a Linux command from Go!!!"
 
-	// the exec.Command will make sys calls to the Linux terminal
-	// Output returns the stdout form the terminal
+	// the exec.Command makes sys calls to the Linux terminal
+	// output returns the stdout from the terminal
 	out, err := exec.Command(cmd, input).Output()
 
 	// test for error
@@ -21,9 +21,7 @@ func Runfile() string {
 		fmt.Printf("%s", err)
 	}
 	// convert stdout to string
-	//output := string(out[:])
 	output := string([]byte(out))
-	fmt.Print(output)
 
 	// return converted output value
 	return output
