@@ -26,3 +26,13 @@ func Runfile() string {
 	// return converted output value
 	return output
 }
+
+// Native function to call Linux command
+func Native() string {
+	cmd, err := exec.Command("/bin/sh", "/Users/richard/Desktop/Go/jekyll-server-build/build/echo.sh").Output()
+	if err != nil {
+		fmt.Printf("error %s", err)
+	}
+	output := string([]byte(cmd))
+	return output
+}
