@@ -8,11 +8,11 @@ import (
 
 func Runfile() (string, error) {
 
-	output, input := "echo", "You successfully ran a Linux command from Go!!!"
+	output, flag, input := "echo", "-n", "You successfully ran a Linux command from Go!!!"
 
 	// the exec.Command makes sys calls to the Linux terminal
 	// output returns the stdout from the terminal
-	cmdLine, err := exec.Command(output, input).Output()
+	cmdLine, err := exec.Command(output, flag, input).Output()
 
 	// test for error
 	if err != nil {

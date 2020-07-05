@@ -9,7 +9,7 @@ import (
 // TestBuild function
 func TestBuild(t *testing.T) {
 	got, err := build.Runfile()
-	want := "You successfully ran a Linux command from Go!!!\n"
+	want := "You successfully ran a Linux command from Go!!!"
 	test2 := "you successfully ran a linux command from go!!!\n"
 	if want != got {
 		t.Errorf("got %q, want %q, test %q, error %q", got, want, test2, err)
@@ -19,7 +19,7 @@ func TestBuild(t *testing.T) {
 // TestNative function
 func TestNative(t *testing.T) {
 	got, err := build.Native()
-	want := "You successfully ran a Linux command from Go!!!\n"
+	want := "You successfully ran a Linux command from Go!!!"
 	if want != got {
 		t.Errorf("want %q, got %q, error %q", want, got, err)
 	}
