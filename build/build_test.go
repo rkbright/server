@@ -6,7 +6,6 @@ import (
 	"testing"
 )
 
-/*
 // TestBuild function
 func TestBuild(t *testing.T) {
 	got := build.Runfile()
@@ -16,7 +15,7 @@ func TestBuild(t *testing.T) {
 		t.Errorf("got %q, want %q, test %q", got, want, test2)
 	}
 }
-*/
+
 // TestNative function
 func TestNative(t *testing.T) {
 	got := build.Native()
