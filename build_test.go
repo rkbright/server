@@ -9,7 +9,7 @@ import (
 func TestCommand(t *testing.T) {
 	t.Parallel()
 	want := "You successfully ran a Linux command from Go!!!\n"
-	got, err := thing.Command("echo", "You successfully ran a Linux command from Go!!!")
+	got, err := thing.NewRunner().Command("echo", "You successfully ran a Linux command from Go!!!")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -18,14 +18,13 @@ func TestCommand(t *testing.T) {
 	}
 }
 
-func TestShell(t *testing.T) {
+func TestYumUpdate(t *testing.T) {
 	t.Parallel()
-	want := "You successfully ran a Linux command from Go!!!\n"
-	got, err := thing.Shell("testdata/echo.sh")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if want != got {
-		t.Errorf("want %q, got %q", want, got)
+	wantCmd := "yum update -y"
+	r := thing.NewRunner()
+	r.Test = true
+	r.YumUpdate()
+	if wantCmd != r.CmdLine {
+		t.Fatalf("want command %q, got %q", wantCmd, r.CmdLine)
 	}
 }

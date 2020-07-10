@@ -6,7 +6,20 @@ import (
 	"strings"
 )
 
-func Command(command string, args ...string) (string, error) {
+type Runner struct {
+	Test    bool
+	CmdLine string
+}
+
+func NewRunner() *Runner {
+	return &Runner{Test: false}
+}
+
+func (r *Runner) Command(command string, args ...string) (string, error) {
+	if r.Test {
+		r.CmdLine = fmt.Sprintf("%s %s", command, strings.Join(args, " "))
+		return "", nil
+	}
 	// the exec.Command makes sys calls to the Linux terminal
 	// output returns the stdout from the terminal
 	output, err := exec.Command(command, args...).CombinedOutput()
@@ -20,10 +33,6 @@ func Command(command string, args ...string) (string, error) {
 	return string(output), nil
 }
 
-func Shell(script string) (string, error) {
-	output, err := exec.Command("/bin/sh", script).Output()
-	if err != nil {
-		return "", fmt.Errorf("failed to run %q: %w", script, err)
-	}
-	return string(output), nil
+func (r *Runner) YumUpdate() {
+	r.Command("yum", "update -y")
 }
