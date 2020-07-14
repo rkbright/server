@@ -9,6 +9,7 @@ import (
 type Runner struct {
 	Test    bool
 	CmdLine string
+	output  string
 }
 
 func NewRunner() *Runner {
@@ -20,19 +21,45 @@ func (r *Runner) Command(command string, args ...string) (string, error) {
 		r.CmdLine = fmt.Sprintf("%s %s", command, strings.Join(args, " "))
 		return "", nil
 	}
-	// the exec.Command makes sys calls to the Linux terminal
-	// output returns the stdout from the terminal
+
 	output, err := exec.Command(command, args...).CombinedOutput()
 
-	// test for error
 	if err != nil {
 		return "", fmt.Errorf("failed to run '%s %s': %w", command, strings.Join(args, " "), err)
 	}
 
-	// return converted output value
 	return string(output), nil
 }
 
 func (r *Runner) YumUpdate() {
 	r.Command("yum", "update -y")
+	fmt.Printf("the output string: %s \n", r.CmdLine)
+}
+
+func (r *Runner) YumInstall() {
+	r.Command("yum", "install epel-release -y")
+}
+
+func (r *Runner) RubyInstall() {
+	r.Command("yum", "install ruby -y")
+}
+
+func (r *Runner) JekyllInstall() {
+	r.Command("gem", "install jekyll")
+}
+
+func (r *Runner) BundlerInstall() {
+	r.Command("gem", "install bundler")
+}
+
+func (r *Runner) RubyVersion() {
+	r.Command("ruby", "2.6")
+}
+
+func (r *Runner) JekyllVersion() {
+	r.Command("jekyll", "4.*")
+}
+
+func (r *Runner) BundlerVersion() {
+	r.Command("Bundler", "2.*")
 }
