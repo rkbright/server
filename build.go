@@ -9,38 +9,36 @@ import (
 type Runner struct {
 	Test    bool
 	CmdLine string
-	output  string
+	Output  string
 }
 
 func NewRunner() *Runner {
 	return &Runner{Test: false}
 }
 
-func (r *Runner) Command(command string, args ...string) (string, error) {
+func (r *Runner) Command(command string, args ...string) error {
+
+	r.CmdLine = fmt.Sprintf("%s %s", command, strings.Join(args, " "))
+
 	if r.Test {
-		r.CmdLine = fmt.Sprintf("%s %s", command, strings.Join(args, " "))
-		return r.CmdLine, nil
+		return nil
 	}
 
 	output, err := exec.Command(command, args...).CombinedOutput()
-	r.output = fmt.Sprintf("%s %s", command, strings.Join(args, " "))
+	r.Output = string(output)
 
 	if err != nil {
-		return "", fmt.Errorf("failed to run '%s %s': %w", command, strings.Join(args, " "), err)
+		return fmt.Errorf("failed to run '%s %s': %w", command, strings.Join(args, " "), err)
 	}
 
-	return string(output), nil
+	return nil
 }
 
-func (r *Runner) YumUpdate() string {
-	if r.Test == true {
-		r.Command("yum", "update -y")
-		return r.CmdLine
-	}
-	r.Command("yum", "update -y")
-	return r.output
+func (r *Runner) YumUpdate() error {
+	return r.Command("yum", "update -y")
 }
 
+/*
 func (r *Runner) YumInstall() string {
 	if r.Test == true {
 		r.Command("yum", "install epel-release -y")
@@ -103,3 +101,4 @@ func (r *Runner) BundlerVersion() string {
 	r.Command("Bundler", "2.*")
 	return r.output
 }
+*/
