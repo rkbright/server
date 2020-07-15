@@ -59,21 +59,21 @@ func (r *Runner) RubyInstall() string {
 	return r.output
 }
 
-func (r *Runner) JekyllInstall() string {
-	if r.Test == true {
-		r.Command("gem", "install jekyll")
-		return r.CmdLine
-	}
-	r.Command("gem", "install jekyll")
-	return r.output
-}
-
 func (r *Runner) BundlerInstall() string {
 	if r.Test == true {
 		r.Command("gem", "install bundler")
 		return r.CmdLine
 	}
 	r.Command("gem", "install bundler")
+	return r.output
+}
+
+func (r *Runner) JekyllInstall() string {
+	if r.Test == true {
+		r.Command("gem", "install jekyll")
+		return r.CmdLine
+	}
+	r.Command("gem", "install jekyll")
 	return r.output
 }
 
