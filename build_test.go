@@ -38,89 +38,64 @@ func TestYumUpdate(t *testing.T) {
 	}
 }
 
-// func TestYumInstall(t *testing.T) {
-// 	t.Parallel()
-// 	r := thing.NewRunner()
-// 	r.Test = true
+func TestYumInstall(t *testing.T) {
+	t.Parallel()
+	r := thing.NewRunner()
+	r.Test = true
 
-// 	wantCmd := "yum install epel-release -y"
-// 	got := r.YumInstall()
+	err := r.YumInstall()
+	if err != nil {
+		t.Fatal(err)
+	}
+	wantCmd := "yum install epel-release -y"
+	if wantCmd != r.CmdLine {
+		t.Fatalf("want command %q, got %q", wantCmd, r.CmdLine)
+	}
+}
 
-// 	if wantCmd != got {
-// 		t.Fatalf("want command %q, got %q", wantCmd, got)
-// 	}
-// }
+func TestRubyInstall(t *testing.T) {
+	t.Parallel()
+	r := thing.NewRunner()
+	r.Test = true
 
-// func TestRubyInstall(t *testing.T) {
-// 	t.Parallel()
-// 	r := thing.NewRunner()
-// 	r.Test = true
+	err := r.RubyInstall()
+	if err != nil {
+		t.Fatal(err)
+	}
 
-// 	wantCmd := "yum install ruby -y"
-// 	got := r.RubyInstall()
-// 	if wantCmd != got {
-// 		t.Fatalf("want command %q, got %q", wantCmd, got)
-// 	}
-// }
+	wantCmd := "yum install ruby -y"
+	if wantCmd != r.CmdLine {
+		t.Fatalf("want command %q, got %q", wantCmd, r.CmdLine)
+	}
+}
 
-// func TestJekyllInstall(t *testing.T) {
-// 	t.Parallel()
-// 	r := thing.NewRunner()
-// 	r.Test = true
+func TestJekyllInstall(t *testing.T) {
+	t.Parallel()
+	r := thing.NewRunner()
+	r.Test = true
 
-// 	wantCmd := "gem install jekyll"
-// 	got := r.JekyllInstall()
-// 	if wantCmd != got {
-// 		t.Fatalf("want command %q, got %q", wantCmd, got)
-// 	}
-// }
+	err := r.JekyllInstall()
+	if err != nil {
+		t.Fatal(err)
+	}
 
-// func TestBundlerInstall(t *testing.T) {
-// 	t.Parallel()
-// 	r := thing.NewRunner()
-// 	r.Test = true
+	wantCmd := "gem install jekyll"
+	if wantCmd != r.CmdLine {
+		t.Fatalf("want command %q, got %q", wantCmd, r.CmdLine)
+	}
+}
 
-// 	wantCmd := "gem install bundler"
-// 	got := r.BundlerInstall()
-// 	if wantCmd != got {
-// 		t.Fatalf("want command %q, got %q", wantCmd, got)
-// 	}
-// }
+func TestBundlerInstall(t *testing.T) {
+	t.Parallel()
+	r := thing.NewRunner()
+	r.Test = true
 
-// func TestRubyVersion(t *testing.T) {
-// 	t.Parallel()
-// 	//ruby versions will change overtime, therefore the test only verifies
-// 	//that a ruby version exists on the server and not for a specific version
-// 	r := thing.NewRunner()
-// 	r.Test = true
-
-// 	wantCmd := "ruby 2.6"
-// 	got := r.RubyVersion()
-// 	if wantCmd != got {
-// 		t.Fatalf("want command %q, got %q", wantCmd, got)
-// 	}
-// }
-
-// func TestJekyllVersion(t *testing.T) {
-// 	t.Parallel()
-// 	r := thing.NewRunner()
-// 	r.Test = true
-
-// 	wantCmd := "jekyll 4.*"
-// 	got := r.JekyllVersion()
-// 	if wantCmd != got {
-// 		t.Fatalf("want command %q, got %q", wantCmd, got)
-// 	}
-// }
-
-// func TestBundlerVersion(t *testing.T) {
-// 	t.Parallel()
-// 	r := thing.NewRunner()
-// 	r.Test = true
-
-// 	wantCmd := "Bundler 2.*"
-// 	got := r.BundlerVersion()
-// 	if wantCmd != got {
-// 		t.Fatalf("want command %q, got %q", wantCmd, got)
-// 	}
-// }
+	err := r.BundlerInstall()
+	if err != nil {
+		t.Fatal(err)
+	}
+	wantCmd := "gem install bundler"
+	if wantCmd != r.CmdLine {
+		t.Fatalf("want command %q, got %q", wantCmd, r.CmdLine)
+	}
+}

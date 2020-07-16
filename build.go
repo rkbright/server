@@ -38,67 +38,19 @@ func (r *Runner) YumUpdate() error {
 	return r.Command("yum", "update -y")
 }
 
-/*
-func (r *Runner) YumInstall() string {
-	if r.Test == true {
-		r.Command("yum", "install epel-release -y")
-		return r.CmdLine
-	}
-	r.Command("yum", "install epel-release -y")
-	return r.output
+func (r *Runner) YumInstall() error {
+	return r.Command("yum", "install epel-release -y")
 }
 
-func (r *Runner) RubyInstall() string {
-	if r.Test == true {
-		r.Command("yum", "install ruby -y")
-		return r.CmdLine
-	}
-	r.Command("yum", "install ruby -y")
-	return r.output
+func (r *Runner) RubyInstall() error {
+	return r.Command("yum", "install ruby -y")
+
 }
 
-func (r *Runner) BundlerInstall() string {
-	if r.Test == true {
-		r.Command("gem", "install bundler")
-		return r.CmdLine
-	}
-	r.Command("gem", "install bundler")
-	return r.output
+func (r *Runner) JekyllInstall() error {
+	return r.Command("gem", "install jekyll")
 }
 
-func (r *Runner) JekyllInstall() string {
-	if r.Test == true {
-		r.Command("gem", "install jekyll")
-		return r.CmdLine
-	}
-	r.Command("gem", "install jekyll")
-	return r.output
+func (r *Runner) BundlerInstall() error {
+	return r.Command("gem", "install bundler")
 }
-
-func (r *Runner) RubyVersion() string {
-	if r.Test == true {
-		r.Command("ruby", "2.6")
-		return r.CmdLine
-	}
-	r.Command("ruby", "2.6")
-	return r.output
-}
-
-func (r *Runner) JekyllVersion() string {
-	if r.Test == true {
-		r.Command("jekyll", "4.*")
-		return r.CmdLine
-	}
-	r.Command("jekyll", "4.*")
-	return r.output
-}
-
-func (r *Runner) BundlerVersion() string {
-	if r.Test == true {
-		r.Command("Bundler", "2.*")
-		return r.CmdLine
-	}
-	r.Command("Bundler", "2.*")
-	return r.output
-}
-*/
