@@ -43,6 +43,16 @@ func (r *Runner) InstallPackages(packages []string) error {
 	return nil
 }
 
+func (r *Runner) CheckInstalledPackages(packages []string) bool {
+	for _, p := range packages {
+		err := r.Command("yum", "bogus "+p)
+		if err != nil {
+			return false
+		}
+	}
+	return true
+}
+
 func (r *Runner) InstallGems(packages []string) error {
 	for _, p := range packages {
 		err := r.Command("gem", "install "+p)

@@ -74,3 +74,21 @@ func TestInstallGems(t *testing.T) {
 		t.Fatal(cmp.Diff(wantHistory, r.History))
 	}
 }
+
+func TestCheckInstalledPackages(t *testing.T) {
+	t.Parallel()
+	r := thing.NewRunner()
+	r.Test = true
+
+	got := r.CheckInstalledPackages([]string{"package1", "package2"})
+	if !got {
+		t.Fatal("want true, got false")
+	}
+	wantHistory := []string{
+		"yum check-install package1",
+		"yum check-install package2",
+	}
+	if !cmp.Equal(wantHistory, r.History) {
+		t.Fatal(cmp.Diff(wantHistory, r.History))
+	}
+}
