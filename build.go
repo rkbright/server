@@ -8,7 +8,7 @@ import (
 
 type Runner struct {
 	Test    bool
-	CmdLine string
+	History []string
 	Output  string
 }
 
@@ -17,40 +17,38 @@ func NewRunner() *Runner {
 }
 
 func (r *Runner) Command(command string, args ...string) error {
-
-	r.CmdLine = fmt.Sprintf("%s %s", command, strings.Join(args, " "))
-
+	r.History = append(r.History, fmt.Sprintf("%s %s", command, strings.Join(args, " ")))
 	if r.Test {
 		return nil
 	}
-
 	output, err := exec.Command(command, args...).CombinedOutput()
 	r.Output = string(output)
-
 	if err != nil {
 		return fmt.Errorf("failed to run '%s %s': %w", command, strings.Join(args, " "), err)
 	}
-
 	return nil
 }
 
-func (r *Runner) YumUpdate() error {
+func (r *Runner) UpdateYum() error {
 	return r.Command("yum", "update -y")
 }
 
-func (r *Runner) YumInstall() error {
-	return r.Command("yum", "install epel-release -y")
+func (r *Runner) InstallPackages(packages []string) error {
+	for _, p := range packages {
+		err := r.Command("yum", "install -y "+p)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
-func (r *Runner) RubyInstall() error {
-	return r.Command("yum", "install ruby -y")
-
-}
-
-func (r *Runner) JekyllInstall() error {
-	return r.Command("gem", "install jekyll")
-}
-
-func (r *Runner) BundlerInstall() error {
-	return r.Command("gem", "install bundler")
+func (r *Runner) InstallGems(packages []string) error {
+	for _, p := range packages {
+		err := r.Command("gem", "install "+p)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

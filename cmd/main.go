@@ -5,9 +5,9 @@ import (
 )
 
 func main() {
-	thing.NewRunner().YumUpdate()
-	thing.NewRunner().YumInstall()
-	thing.NewRunner().RubyInstall()
-	thing.NewRunner().BundlerInstall()
-	thing.NewRunner().JekyllInstall()
+	r := thing.NewRunner()
+	r.InstallPackages(["epel"])
+	r.UpdateYum()
+	r.InstallPackages(["ruby"])
+	r.InstallGems(["bundler", "jekyll"])
 }
