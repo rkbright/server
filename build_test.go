@@ -4,6 +4,8 @@ package thing_test
 import (
 	"testing"
 	"thing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestCommand(t *testing.T) {
@@ -13,12 +15,12 @@ func TestCommand(t *testing.T) {
 	r.Test = true
 	err := r.Command("echo", "You successfully ran a Linux command from Go!!!")
 
-	want := "echo You successfully ran a Linux command from Go!!!"
+	wantHistory := []string{"echo You successfully ran a Linux command from Go!!!"}
 	if err != nil {
 		t.Fatal(err)
 	}
-	if want != r.CmdLine {
-		t.Errorf("got %q, want %q", want, r.CmdLine)
+	if !cmp.Equal(wantHistory, r.History) {
+		t.Fatal(cmp.Diff(wantHistory, r.History))
 	}
 }
 
@@ -27,100 +29,66 @@ func TestYumUpdate(t *testing.T) {
 	r := thing.NewRunner()
 	r.Test = true
 
-	err := r.YumUpdate()
+	err := r.UpdateYum()
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	wantCmd := "yum update -y"
-	if wantCmd != r.CmdLine {
-		t.Errorf("got %q, want %q", wantCmd, r.CmdLine)
+	wantHistory := []string{"yum update -y"}
+	if !cmp.Equal(wantHistory, r.History) {
+		t.Fatal(cmp.Diff(wantHistory, r.History))
 	}
 }
 
-// func TestYumInstall(t *testing.T) {
-// 	t.Parallel()
-// 	r := thing.NewRunner()
-// 	r.Test = true
+func TestInstallPackages(t *testing.T) {
+	t.Parallel()
+	r := thing.NewRunner()
+	r.Test = true
+	err := r.InstallPackages([]string{"epel-release", "ruby"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	wantHistory := []string{
+		"yum install -y epel-release",
+		"yum install -y ruby",
+	}
+	if !cmp.Equal(wantHistory, r.History) {
+		t.Fatal(cmp.Diff(wantHistory, r.History))
+	}
+}
 
-// 	wantCmd := "yum install epel-release -y"
-// 	got := r.YumInstall()
+func TestInstallGems(t *testing.T) {
+	t.Parallel()
+	r := thing.NewRunner()
+	r.Test = true
 
-// 	if wantCmd != got {
-// 		t.Fatalf("want command %q, got %q", wantCmd, got)
-// 	}
-// }
+	err := r.InstallGems([]string{"bundler", "jekyll"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	wantHistory := []string{
+		"gem install bundler",
+		"gem install jekyll",
+	}
+	if !cmp.Equal(wantHistory, r.History) {
+		t.Fatal(cmp.Diff(wantHistory, r.History))
+	}
+}
 
-// func TestRubyInstall(t *testing.T) {
-// 	t.Parallel()
-// 	r := thing.NewRunner()
-// 	r.Test = true
+func TestCheckInstalledPackages(t *testing.T) {
+	t.Parallel()
+	r := thing.NewRunner()
+	r.Test = true
 
-// 	wantCmd := "yum install ruby -y"
-// 	got := r.RubyInstall()
-// 	if wantCmd != got {
-// 		t.Fatalf("want command %q, got %q", wantCmd, got)
-// 	}
-// }
-
-// func TestJekyllInstall(t *testing.T) {
-// 	t.Parallel()
-// 	r := thing.NewRunner()
-// 	r.Test = true
-
-// 	wantCmd := "gem install jekyll"
-// 	got := r.JekyllInstall()
-// 	if wantCmd != got {
-// 		t.Fatalf("want command %q, got %q", wantCmd, got)
-// 	}
-// }
-
-// func TestBundlerInstall(t *testing.T) {
-// 	t.Parallel()
-// 	r := thing.NewRunner()
-// 	r.Test = true
-
-// 	wantCmd := "gem install bundler"
-// 	got := r.BundlerInstall()
-// 	if wantCmd != got {
-// 		t.Fatalf("want command %q, got %q", wantCmd, got)
-// 	}
-// }
-
-// func TestRubyVersion(t *testing.T) {
-// 	t.Parallel()
-// 	//ruby versions will change overtime, therefore the test only verifies
-// 	//that a ruby version exists on the server and not for a specific version
-// 	r := thing.NewRunner()
-// 	r.Test = true
-
-// 	wantCmd := "ruby 2.6"
-// 	got := r.RubyVersion()
-// 	if wantCmd != got {
-// 		t.Fatalf("want command %q, got %q", wantCmd, got)
-// 	}
-// }
-
-// func TestJekyllVersion(t *testing.T) {
-// 	t.Parallel()
-// 	r := thing.NewRunner()
-// 	r.Test = true
-
-// 	wantCmd := "jekyll 4.*"
-// 	got := r.JekyllVersion()
-// 	if wantCmd != got {
-// 		t.Fatalf("want command %q, got %q", wantCmd, got)
-// 	}
-// }
-
-// func TestBundlerVersion(t *testing.T) {
-// 	t.Parallel()
-// 	r := thing.NewRunner()
-// 	r.Test = true
-
-// 	wantCmd := "Bundler 2.*"
-// 	got := r.BundlerVersion()
-// 	if wantCmd != got {
-// 		t.Fatalf("want command %q, got %q", wantCmd, got)
-// 	}
-// }
+	got := r.CheckInstalledPackages([]string{"package1", "package2"})
+	if !got {
+		t.Fatal("want true, got false")
+	}
+	wantHistory := []string{
+		"yum check-install package1",
+		"yum check-install package2",
+	}
+	if !cmp.Equal(wantHistory, r.History) {
+		t.Fatal(cmp.Diff(wantHistory, r.History))
+	}
+}

@@ -8,7 +8,7 @@ import (
 
 type Runner struct {
 	Test    bool
-	CmdLine string
+	History []string
 	Output  string
 }
 
@@ -17,88 +17,48 @@ func NewRunner() *Runner {
 }
 
 func (r *Runner) Command(command string, args ...string) error {
-
-	r.CmdLine = fmt.Sprintf("%s %s", command, strings.Join(args, " "))
-
+	r.History = append(r.History, fmt.Sprintf("%s %s", command, strings.Join(args, " ")))
 	if r.Test {
 		return nil
 	}
-
 	output, err := exec.Command(command, args...).CombinedOutput()
 	r.Output = string(output)
-
 	if err != nil {
 		return fmt.Errorf("failed to run '%s %s': %w", command, strings.Join(args, " "), err)
 	}
-
 	return nil
 }
 
-func (r *Runner) YumUpdate() error {
+func (r *Runner) UpdateYum() error {
 	return r.Command("yum", "update -y")
 }
 
-/*
-func (r *Runner) YumInstall() string {
-	if r.Test == true {
-		r.Command("yum", "install epel-release -y")
-		return r.CmdLine
+func (r *Runner) InstallPackages(packages []string) error {
+	for _, p := range packages {
+		err := r.Command("yum", "install -y "+p)
+		if err != nil {
+			return err
+		}
 	}
-	r.Command("yum", "install epel-release -y")
-	return r.output
+	return nil
 }
 
-func (r *Runner) RubyInstall() string {
-	if r.Test == true {
-		r.Command("yum", "install ruby -y")
-		return r.CmdLine
+func (r *Runner) CheckInstalledPackages(packages []string) bool {
+	for _, p := range packages {
+		err := r.Command("yum", "bogus "+p)
+		if err != nil {
+			return false
+		}
 	}
-	r.Command("yum", "install ruby -y")
-	return r.output
+	return true
 }
 
-func (r *Runner) BundlerInstall() string {
-	if r.Test == true {
-		r.Command("gem", "install bundler")
-		return r.CmdLine
+func (r *Runner) InstallGems(packages []string) error {
+	for _, p := range packages {
+		err := r.Command("gem", "install "+p)
+		if err != nil {
+			return err
+		}
 	}
-	r.Command("gem", "install bundler")
-	return r.output
+	return nil
 }
-
-func (r *Runner) JekyllInstall() string {
-	if r.Test == true {
-		r.Command("gem", "install jekyll")
-		return r.CmdLine
-	}
-	r.Command("gem", "install jekyll")
-	return r.output
-}
-
-func (r *Runner) RubyVersion() string {
-	if r.Test == true {
-		r.Command("ruby", "2.6")
-		return r.CmdLine
-	}
-	r.Command("ruby", "2.6")
-	return r.output
-}
-
-func (r *Runner) JekyllVersion() string {
-	if r.Test == true {
-		r.Command("jekyll", "4.*")
-		return r.CmdLine
-	}
-	r.Command("jekyll", "4.*")
-	return r.output
-}
-
-func (r *Runner) BundlerVersion() string {
-	if r.Test == true {
-		r.Command("Bundler", "2.*")
-		return r.CmdLine
-	}
-	r.Command("Bundler", "2.*")
-	return r.output
-}
-*/
