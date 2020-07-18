@@ -6,8 +6,8 @@ import (
 
 func main() {
 	r := thing.NewRunner()
-	r.InstallPackages(["epel"])
+	r.InstallPackages([]string{"epel-release"})
 	r.UpdateYum()
-	r.InstallPackages(["ruby"])
-	r.InstallGems(["bundler", "jekyll"])
+	r.InstallPackages([]string{"ruby"})
+	r.InstallGems([]string{"jekyll", "bundler"})
 }

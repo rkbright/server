@@ -45,7 +45,7 @@ func (r *Runner) InstallPackages(packages []string) error {
 
 func (r *Runner) CheckInstalledPackages(packages []string) bool {
 	for _, p := range packages {
-		err := r.Command("yum", "bogus "+p)
+		err := r.Command(p, "--version")
 		if err != nil {
 			return false
 		}
