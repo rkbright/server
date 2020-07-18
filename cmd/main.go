@@ -10,4 +10,5 @@ func main() {
 	r.UpdateYum()
 	r.InstallPackages([]string{"ruby"})
 	r.InstallGems([]string{"jekyll", "bundler"})
+	r.CheckInstalledPackages([]string{"ruby", "bundler", "gem"})
 }
