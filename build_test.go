@@ -27,7 +27,7 @@ func TestCommand(t *testing.T) {
 func TestYumUpdate(t *testing.T) {
 	t.Parallel()
 	r := thing.NewRunner()
-	r.Test = true
+	r.Test = false
 
 	err := r.UpdateYum()
 	if err != nil {
