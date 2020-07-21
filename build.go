@@ -62,3 +62,14 @@ func (r *Runner) InstallGems(packages []string) error {
 	}
 	return nil
 }
+
+func (r *Runner) CheckPackageExists(packages []string) []string {
+	for _, p := range packages {
+		path, err := exec.LookPath(p)
+		if err != nil {
+			fmt.Printf("didn't find '%s' package\n", p)
+		}
+		fmt.Printf("'%s' package is '%s'\n", p, path)
+	}
+	return nil
+}

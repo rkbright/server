@@ -27,7 +27,7 @@ func TestCommand(t *testing.T) {
 func TestYumUpdate(t *testing.T) {
 	t.Parallel()
 	r := thing.NewRunner()
-	r.Test = false
+	r.Test = true
 
 	err := r.UpdateYum()
 	if err != nil {
@@ -88,6 +88,21 @@ func TestCheckInstalledPackages(t *testing.T) {
 		"ruby --version",
 		"bundler --version",
 		"gem --version",
+	}
+	if !cmp.Equal(wantHistory, r.History) {
+		t.Fatal(cmp.Diff(wantHistory, r.History))
+	}
+}
+
+func TestCheckPackageExists(t *testing.T) {
+	t.Parallel()
+	r := thing.NewRunner()
+	r.Test = true
+
+	wantHistory := []string{
+		"ruby",
+		"bundler",
+		"gem",
 	}
 	if !cmp.Equal(wantHistory, r.History) {
 		t.Fatal(cmp.Diff(wantHistory, r.History))
