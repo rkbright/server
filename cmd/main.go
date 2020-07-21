@@ -1,8 +1,6 @@
 package main
 
-import (
-	"thing"
-)
+import "thing"
 
 func main() {
 	r := thing.NewRunner()
@@ -11,6 +9,7 @@ func main() {
 	r.InstallPackages([]string{"ruby"})
 	r.InstallGems([]string{"jekyll", "bundler"})
 	r.CheckInstalledPackages([]string{"ruby", "bundler", "gem"})
+	r.CheckPackageExists([]string{"ruby", "bundler", "gem"})
 }
 
 /*
