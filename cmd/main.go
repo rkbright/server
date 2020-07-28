@@ -4,16 +4,15 @@ import "thing"
 
 func main() {
 
-	yumInstall := []string{"epel-release"}
-
-	packInstall := make([]string, 4)
+	packInstall := make([]string, 5)
 	packInstall[0] = "ruby"
 	packInstall[1] = "jekyll"
 	packInstall[2] = "bundler"
 	packInstall[3] = "gem"
+	packInstall[4] = "epel-release"
 
 	r := thing.NewRunner()
-	r.InstallPackages(yumInstall)
+	r.InstallPackages(packInstall[4:])
 	r.UpdateYum()
 	r.InstallPackages(packInstall[0:])
 	r.InstallGems(packInstall[1:2])
