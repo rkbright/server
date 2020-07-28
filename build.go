@@ -7,18 +7,24 @@ import (
 )
 
 type Runner struct {
-	Test    bool
+	test    bool
 	History []string
 	Output  string
 }
 
 func NewRunner() *Runner {
-	return &Runner{Test: false}
+	return &Runner{}
+}
+
+func NewTestRunner() *Runner {
+	r := NewRunner()
+	r.test = true
+	return r
 }
 
 func (r *Runner) Command(command string, args ...string) error {
 	r.History = append(r.History, fmt.Sprintf("%s %s", command, strings.Join(args, " ")))
-	if r.Test {
+	if r.test {
 		return nil
 	}
 	output, err := exec.Command(command, args...).CombinedOutput()
@@ -43,16 +49,6 @@ func (r *Runner) InstallPackages(packages []string) error {
 	return nil
 }
 
-func (r *Runner) CheckInstalledPackages(packages []string) bool {
-	for _, p := range packages {
-		err := r.Command(p, "--version")
-		if err != nil {
-			return false
-		}
-	}
-	return true
-}
-
 func (r *Runner) InstallGems(packages []string) error {
 	for _, p := range packages {
 		err := r.Command("gem", "install "+p)
@@ -61,6 +57,16 @@ func (r *Runner) InstallGems(packages []string) error {
 		}
 	}
 	return nil
+}
+
+func (r *Runner) CheckInstalledPackages(packages []string) bool {
+	for _, p := range packages {
+		err := r.Command(p, "--version")
+		if err != nil {
+			return false
+		}
+	}
+	return true
 }
 
 func (r *Runner) CheckPackageExists(packages []string) []string {

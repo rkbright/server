@@ -11,8 +11,7 @@ import (
 func TestCommand(t *testing.T) {
 	t.Parallel()
 
-	r := thing.NewRunner()
-	r.Test = true
+	r := thing.NewTestRunner()
 	err := r.Command("echo", "You successfully ran a Linux command from Go!!!")
 
 	wantHistory := []string{"echo You successfully ran a Linux command from Go!!!"}
@@ -26,8 +25,7 @@ func TestCommand(t *testing.T) {
 
 func TestYumUpdate(t *testing.T) {
 	t.Parallel()
-	r := thing.NewRunner()
-	r.Test = true
+	r := thing.NewTestRunner()
 
 	err := r.UpdateYum()
 	if err != nil {
@@ -42,8 +40,8 @@ func TestYumUpdate(t *testing.T) {
 
 func TestInstallPackages(t *testing.T) {
 	t.Parallel()
-	r := thing.NewRunner()
-	r.Test = true
+	r := thing.NewTestRunner()
+
 	err := r.InstallPackages([]string{"epel-release", "ruby"})
 	if err != nil {
 		t.Fatal(err)
@@ -59,8 +57,7 @@ func TestInstallPackages(t *testing.T) {
 
 func TestInstallGems(t *testing.T) {
 	t.Parallel()
-	r := thing.NewRunner()
-	r.Test = true
+	r := thing.NewTestRunner()
 
 	err := r.InstallGems([]string{"bundler", "jekyll"})
 	if err != nil {
@@ -77,8 +74,7 @@ func TestInstallGems(t *testing.T) {
 
 func TestCheckInstalledPackages(t *testing.T) {
 	t.Parallel()
-	r := thing.NewRunner()
-	r.Test = true
+	r := thing.NewTestRunner()
 
 	got := r.CheckInstalledPackages([]string{"ruby", "bundler", "gem"})
 	if !got {
@@ -88,21 +84,6 @@ func TestCheckInstalledPackages(t *testing.T) {
 		"ruby --version",
 		"bundler --version",
 		"gem --version",
-	}
-	if !cmp.Equal(wantHistory, r.History) {
-		t.Fatal(cmp.Diff(wantHistory, r.History))
-	}
-}
-
-func TestCheckPackageExists(t *testing.T) {
-	t.Parallel()
-	r := thing.NewRunner()
-	r.Test = true
-
-	wantHistory := []string{
-		"ruby",
-		"bundler",
-		"gem",
 	}
 	if !cmp.Equal(wantHistory, r.History) {
 		t.Fatal(cmp.Diff(wantHistory, r.History))
