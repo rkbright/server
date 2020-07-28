@@ -3,13 +3,22 @@ package main
 import "thing"
 
 func main() {
+
+	yumInstall := []string{"epel-release"}
+
+	packInstall := make([]string, 4)
+	packInstall[0] = "ruby"
+	packInstall[1] = "jekyll"
+	packInstall[2] = "bundler"
+	packInstall[3] = "gem"
+
 	r := thing.NewRunner()
-	r.InstallPackages([]string{"epel-release"})
+	r.InstallPackages(yumInstall)
 	r.UpdateYum()
-	r.InstallPackages([]string{"ruby"})
-	r.InstallGems([]string{"jekyll", "bundler"})
-	r.CheckInstalledPackages([]string{"ruby", "bundler", "gem"})
-	r.CheckPackageExists([]string{"ruby", "bundler", "gem"})
+	r.InstallPackages(packInstall[0:])
+	r.InstallGems(packInstall[1:2])
+	r.CheckInstalledPackages(packInstall[:])
+	r.CheckPackageExists(packInstall[:])
 }
 
 /*
