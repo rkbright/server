@@ -1,6 +1,7 @@
 package thing
 
 import (
+	"errors"
 	"fmt"
 	"os/exec"
 	"strings"
@@ -59,23 +60,15 @@ func (r *Runner) InstallGems(packages []string) error {
 	return nil
 }
 
-func (r *Runner) CheckInstalledPackages(packages []string) bool {
-	for _, p := range packages {
-		err := r.Command(p, "--version")
-		if err != nil {
-			return false
-		}
-	}
-	return true
-}
+func (r *Runner) IsInstalled(pkg string) bool {
+	err := r.Command("rpm -q", pkg)
 
-func (r *Runner) CheckPackageExists(packages []string) []string {
-	for _, p := range packages {
-		path, err := exec.LookPath(p)
-		if err != nil {
-			fmt.Printf("didn't find '%s' package\n", p)
-		}
-		fmt.Printf("'%s' package is '%s'\n", p, path)
+	var exiterror *exec.ExitError
+	var status = errors.As(err, &exiterror)
+
+	if !status { //testing if false
+		fmt.Printf("command did not run, exit code of %v\n", status)
 	}
-	return nil
+
+	return true
 }

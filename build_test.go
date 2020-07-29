@@ -76,14 +76,9 @@ func TestCheckInstalledPackages(t *testing.T) {
 	t.Parallel()
 	r := thing.NewTestRunner()
 
-	got := r.CheckInstalledPackages([]string{"ruby", "bundler", "gem"})
-	if !got {
-		t.Fatal("want true, got false")
-	}
+	_ = r.IsInstalled("ruby")
 	wantHistory := []string{
-		"ruby --version",
-		"bundler --version",
-		"gem --version",
+		"rpm -q ruby",
 	}
 	if !cmp.Equal(wantHistory, r.History) {
 		t.Fatal(cmp.Diff(wantHistory, r.History))
