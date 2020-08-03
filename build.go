@@ -1,24 +1,31 @@
 package thing
 
 import (
+	"errors"
 	"fmt"
 	"os/exec"
 	"strings"
 )
 
 type Runner struct {
-	Test    bool
+	test    bool
 	History []string
 	Output  string
 }
 
 func NewRunner() *Runner {
-	return &Runner{Test: false}
+	return &Runner{}
+}
+
+func NewTestRunner() *Runner {
+	r := NewRunner()
+	r.test = true
+	return r
 }
 
 func (r *Runner) Command(command string, args ...string) error {
 	r.History = append(r.History, fmt.Sprintf("%s %s", command, strings.Join(args, " ")))
-	if r.Test {
+	if r.test {
 		return nil
 	}
 	output, err := exec.Command(command, args...).CombinedOutput()
@@ -43,16 +50,6 @@ func (r *Runner) InstallPackages(packages []string) error {
 	return nil
 }
 
-func (r *Runner) CheckInstalledPackages(packages []string) bool {
-	for _, p := range packages {
-		err := r.Command(p, "--version")
-		if err != nil {
-			return false
-		}
-	}
-	return true
-}
-
 func (r *Runner) InstallGems(packages []string) error {
 	for _, p := range packages {
 		err := r.Command("gem", "install "+p)
@@ -63,13 +60,15 @@ func (r *Runner) InstallGems(packages []string) error {
 	return nil
 }
 
-func (r *Runner) CheckPackageExists(packages []string) []string {
-	for _, p := range packages {
-		path, err := exec.LookPath(p)
-		if err != nil {
-			fmt.Printf("didn't find '%s' package\n", p)
-		}
-		fmt.Printf("'%s' package is '%s'\n", p, path)
+func (r *Runner) IsInstalled(pkg string) bool {
+	err := r.Command("rpm -q", pkg)
+
+	return err == nil
+	var status = errors.As(err, &exiterror)
+
+	if !status { //testing if false
+		fmt.Printf("command did not run, exit code of %v\n", status)
 	}
-	return nil
+
+	return true
 }
