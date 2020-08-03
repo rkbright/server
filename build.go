@@ -63,7 +63,7 @@ func (r *Runner) InstallGems(packages []string) error {
 func (r *Runner) IsInstalled(pkg string) bool {
 	err := r.Command("rpm -q", pkg)
 
-	var exiterror *exec.ExitError
+	return err == nil
 	var status = errors.As(err, &exiterror)
 
 	if !status { //testing if false
