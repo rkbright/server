@@ -1,23 +1,25 @@
 package thing
 
 import (
-	"errors"
 	"fmt"
+	"log"
 	"os/exec"
 	"strings"
 )
 
 type Runner struct {
-	test    bool
-	History []string
-	Output  string
+	test      bool
+	History   []string
+	Output    string
+	updated   bool
+	installed bool
 }
 
 func NewRunner() *Runner {
 	return &Runner{}
 }
 
-func NewTestRunner() *Runner {
+func TestNewRunner() *Runner {
 	r := NewRunner()
 	r.test = true
 	return r
@@ -36,21 +38,33 @@ func (r *Runner) Command(command string, args ...string) error {
 	return nil
 }
 
-func (r *Runner) UpdateYum() error {
-	return r.Command("yum", "update -y")
-}
+func (r *Runner) InstallPackage(packages []string) error {
 
-func (r *Runner) InstallPackages(packages []string) error {
+	if !r.updated {
+		r.Command("yum", "update -y")
+		r.updated = true
+	}
+
 	for _, p := range packages {
-		err := r.Command("yum", "install -y "+p)
-		if err != nil {
-			return err
+		if p != "update" {
+			err := r.Command("yum", "install -y "+p)
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil
 }
 
 func (r *Runner) InstallGems(packages []string) error {
+
+	if !r.installed {
+		log.Println("Need to install Ruby")
+		r.InstallPackage([]string{"ruby"})
+		r.installed = true
+
+	}
+
 	for _, p := range packages {
 		err := r.Command("gem", "install "+p)
 		if err != nil {
@@ -58,17 +72,4 @@ func (r *Runner) InstallGems(packages []string) error {
 		}
 	}
 	return nil
-}
-
-func (r *Runner) IsInstalled(pkg string) bool {
-	err := r.Command("rpm -q", pkg)
-
-	var exiterror *exec.ExitError
-	var status = errors.As(err, &exiterror)
-
-	if !status { //testing if false
-		fmt.Printf("command did not run, exit code of %v\n", status)
-	}
-
-	return true
 }

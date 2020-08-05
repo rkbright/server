@@ -8,13 +8,13 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-func TestCommand(t *testing.T) {
+// for yum packages, test the user has an id of 0 (root)
+func TestUserCommand(t *testing.T) {
 	t.Parallel()
+	r := thing.TestNewRunner()
+	err := r.Command("id", "-u")
 
-	r := thing.NewTestRunner()
-	err := r.Command("echo", "You successfully ran a Linux command from Go!!!")
-
-	wantHistory := []string{"echo You successfully ran a Linux command from Go!!!"}
+	wantHistory := []string{"id -u"}
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -23,30 +23,16 @@ func TestCommand(t *testing.T) {
 	}
 }
 
-func TestYumUpdate(t *testing.T) {
+func TestInstallPackage(t *testing.T) {
 	t.Parallel()
-	r := thing.NewTestRunner()
+	r := thing.TestNewRunner()
 
-	err := r.UpdateYum()
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	wantHistory := []string{"yum update -y"}
-	if !cmp.Equal(wantHistory, r.History) {
-		t.Fatal(cmp.Diff(wantHistory, r.History))
-	}
-}
-
-func TestInstallPackages(t *testing.T) {
-	t.Parallel()
-	r := thing.NewTestRunner()
-
-	err := r.InstallPackages([]string{"epel-release", "ruby"})
+	err := r.InstallPackage([]string{"update", "epel-release", "ruby"})
 	if err != nil {
 		t.Fatal(err)
 	}
 	wantHistory := []string{
+		"yum update -y",
 		"yum install -y epel-release",
 		"yum install -y ruby",
 	}
@@ -55,9 +41,9 @@ func TestInstallPackages(t *testing.T) {
 	}
 }
 
-func TestInstallGems(t *testing.T) {
+func TestInstallGem(t *testing.T) {
 	t.Parallel()
-	r := thing.NewTestRunner()
+	r := thing.TestNewRunner()
 
 	err := r.InstallGems([]string{"bundler", "jekyll"})
 	if err != nil {
@@ -66,19 +52,6 @@ func TestInstallGems(t *testing.T) {
 	wantHistory := []string{
 		"gem install bundler",
 		"gem install jekyll",
-	}
-	if !cmp.Equal(wantHistory, r.History) {
-		t.Fatal(cmp.Diff(wantHistory, r.History))
-	}
-}
-
-func TestCheckInstalledPackages(t *testing.T) {
-	t.Parallel()
-	r := thing.NewTestRunner()
-
-	_ = r.IsInstalled("ruby")
-	wantHistory := []string{
-		"rpm -q ruby",
 	}
 	if !cmp.Equal(wantHistory, r.History) {
 		t.Fatal(cmp.Diff(wantHistory, r.History))
