@@ -2,24 +2,23 @@ package thing
 
 import (
 	"fmt"
-	"log"
 	"os/exec"
 	"strings"
 )
 
 type Runner struct {
-	test      bool
-	History   []string
-	Output    string
-	updated   bool
-	installed bool
+	History       []string
+	Output        string
+	test          bool
+	rubyInstalled bool
+	installed     bool
 }
 
 func NewRunner() *Runner {
 	return &Runner{}
 }
 
-func TestNewRunner() *Runner {
+func NewTestRunner() *Runner {
 	r := NewRunner()
 	r.test = true
 	return r
@@ -40,30 +39,21 @@ func (r *Runner) Command(command string, args ...string) error {
 
 func (r *Runner) InstallPackage(packages []string) error {
 
-	if !r.updated {
+	if !r.rubyInstalled {
 		r.Command("yum", "update -y")
-		r.updated = true
+		r.rubyInstalled = true
 	}
 
 	for _, p := range packages {
-		if p != "update" {
-			err := r.Command("yum", "install -y "+p)
-			if err != nil {
-				return err
-			}
+		err := r.Command("yum", "install -y "+p)
+		if err != nil {
+			return err
 		}
 	}
 	return nil
 }
 
 func (r *Runner) InstallGems(packages []string) error {
-
-	if !r.installed {
-		log.Println("Need to install Ruby")
-		r.InstallPackage([]string{"ruby"})
-		r.installed = true
-
-	}
 
 	for _, p := range packages {
 		err := r.Command("gem", "install "+p)

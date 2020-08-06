@@ -8,26 +8,11 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-// for yum packages, test the user has an id of 0 (root)
-func TestUserCommand(t *testing.T) {
-	t.Parallel()
-	r := thing.TestNewRunner()
-	err := r.Command("id", "-u")
-
-	wantHistory := []string{"id -u"}
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !cmp.Equal(wantHistory, r.History) {
-		t.Fatal(cmp.Diff(wantHistory, r.History))
-	}
-}
-
 func TestInstallPackage(t *testing.T) {
 	t.Parallel()
-	r := thing.TestNewRunner()
+	r := thing.NewTestRunner()
 
-	err := r.InstallPackage([]string{"update", "epel-release", "ruby"})
+	err := r.InstallPackage([]string{"epel-release", "ruby"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -43,7 +28,7 @@ func TestInstallPackage(t *testing.T) {
 
 func TestInstallGem(t *testing.T) {
 	t.Parallel()
-	r := thing.TestNewRunner()
+	r := thing.NewTestRunner()
 
 	err := r.InstallGems([]string{"bundler", "jekyll"})
 	if err != nil {
