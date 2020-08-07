@@ -1,17 +1,15 @@
-// Package to test build.go file
-package thing_test
+package server_test
 
 import (
+	"server"
 	"testing"
-	"thing"
 
 	"github.com/google/go-cmp/cmp"
 )
 
 func TestInstallPackage(t *testing.T) {
 	t.Parallel()
-	r := thing.NewTestRunner()
-
+	r := server.NewTestRunner()
 	err := r.InstallPackage("python")
 	if err != nil {
 		t.Fatal(err)
@@ -32,7 +30,7 @@ func TestInstallPackage(t *testing.T) {
 
 func TestInstallGem(t *testing.T) {
 	t.Parallel()
-	r := thing.NewTestRunner()
+	r := server.NewTestRunner()
 	err := r.InstallGem("bundler")
 	if err != nil {
 		t.Fatal(err)

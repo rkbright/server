@@ -1,11 +1,16 @@
 package main
 
 import (
-	"thing"
+	"log"
+	"server"
 )
 
 func main() {
-	r := thing.NewRunner()
-	r.InstallGem("bundler")
-	r.InstallGem("jekyll")
+	r := server.NewRunner()
+	// r.InstallGem("bundler")
+	// r.InstallGem("jekyll")
+	err := r.Command("date")
+	if err != nil {
+		log.Fatal(err)
+	}
 }
