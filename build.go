@@ -51,16 +51,25 @@ func (r *Runner) InstallPackage(p string) error {
 }
 
 func (r *Runner) InstallGem(p string) error {
+	r.EnsureRubyInstalled()
+	err := r.Command("gem", "install "+p)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *Runner) EnsureRubyInstalled() error {
 	if !r.rubyInstalled {
-		err := r.InstallPackage("ruby")
+		err := r.InstallPackage("epel-release")
+		if err != nil {
+			return err
+		}
+		err = r.InstallPackage("ruby")
 		if err != nil {
 			return err
 		}
 		r.rubyInstalled = true
-	}
-	err := r.Command("gem", "install "+p)
-	if err != nil {
-		return err
 	}
 	return nil
 }
