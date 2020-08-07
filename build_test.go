@@ -12,7 +12,11 @@ func TestInstallPackage(t *testing.T) {
 	t.Parallel()
 	r := thing.NewTestRunner()
 
-	err := r.InstallPackage([]string{"epel-release", "ruby"})
+	err := r.InstallPackage("epel-release")
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = r.InstallPackage("ruby")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -29,12 +33,17 @@ func TestInstallPackage(t *testing.T) {
 func TestInstallGem(t *testing.T) {
 	t.Parallel()
 	r := thing.NewTestRunner()
-
-	err := r.InstallGems([]string{"bundler", "jekyll"})
+	err := r.InstallGem("bundler")
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = r.InstallGem("jekyll")
 	if err != nil {
 		t.Fatal(err)
 	}
 	wantHistory := []string{
+		"yum update -y",
+		"yum install -y ruby",
 		"gem install bundler",
 		"gem install jekyll",
 	}
