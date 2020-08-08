@@ -1,4 +1,4 @@
-module thing
+module server
 
 go 1.14
 
