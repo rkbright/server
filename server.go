@@ -43,7 +43,7 @@ func (r *Runner) InstallPackage(p string) error {
 	if err != nil {
 		return err
 	}
-	err = r.Command("yum", "install -y "+p)
+	err = r.Command("sudo", "yum", "install", "-y", p)
 	if err != nil {
 		return err
 	}
@@ -52,7 +52,7 @@ func (r *Runner) InstallPackage(p string) error {
 
 func (r *Runner) EnsureYumUpdated() error {
 	if !r.yumUpdated {
-		err := r.Command("yum", "update -y")
+		err := r.Command("sudo", "yum", "update", "-y")
 		if err != nil {
 			return err
 		}
@@ -66,7 +66,7 @@ func (r *Runner) InstallGem(p string) error {
 	if err != nil {
 		return err
 	}
-	err = r.Command("gem", "install "+p)
+	err = r.Command("gem", "install", p)
 	if err != nil {
 		return err
 	}

@@ -19,9 +19,9 @@ func TestInstallPackage(t *testing.T) {
 		t.Fatal(err)
 	}
 	wantHistory := []string{
-		"yum update -y",
-		"yum install -y python",
-		"yum install -y java",
+		"sudo yum update -y",
+		"sudo yum install -y python",
+		"sudo yum install -y java",
 	}
 	if !cmp.Equal(wantHistory, r.History) {
 		t.Fatal(cmp.Diff(wantHistory, r.History))
@@ -40,9 +40,16 @@ func TestInstallGem(t *testing.T) {
 		t.Fatal(err)
 	}
 	wantHistory := []string{
-		"yum update -y",
-		"yum install -y epel-release",
-		"yum install -y ruby",
+		"sudo yum update -y",
+		"sudo yum install -y gcc-c++ patch readline readline-devel zlib zlib-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison sqlite-devel",
+		"curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -",
+		"curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -",
+		"curl -L get.rvm.io | bash -s stable",
+		"source /etc/profile.d/rvm.sh",
+		"rvm reload",
+		"rvm requirements run",
+		"rvm install 2.7",
+		"rvm use 2.7 --default",
 		"gem install bundler",
 		"gem install jekyll",
 	}
