@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-const rvmDependencies string = "gcc-c++ patch readline readline-devel zlib zlib-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison sqlite-devel"
+const rvmDependencies string = "certbot python2-certbot-apache gcc-c++ patch readline readline-devel zlib zlib-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison sqlite-devel"
 
 type Runner struct {
 	History      []string
@@ -85,14 +85,25 @@ func (r *Runner) InstallGem(p string) error {
 func (r *Runner) EnsureRvmInstalled() error {
 
 	r.InstallPackage(rvmDependencies)
-	r.Command("curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -")
-	r.Command("curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -")
-	r.Command("curl -L get.rvm.io | bash -s stable")
-	r.Command("source /etc/profile.d/rvm.sh")
-	r.Command("rvm reload")
-	r.Command("rvm requirements run")
-	r.Command("rvm install 2.7")
-	r.Command("rvm use 2.7 --default")
+	getKey1 := "curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -"
+	r.Command("bash", "-c", getKey1)
+
+	getKey2 := "curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -"
+	r.Command("bash", "-c", getKey2)
+
+	getRvm := "curl -L get.rvm.io | bash -s stable"
+	r.Command("bash", "-c", getRvm)
+
+	r.Command("source", "$HOME/.rvm/scripts/rvm")
+
+	r.Command("rvm", "reload")
+	r.Command("rvm", "requirements", "run")
+	r.Command("rvm", "list", "known")
+	r.Command("rvm", "install", "2.7")
+	r.Command("rvm", "list")
+
+	setRuby := "rvm use 2.7 --default"
+	r.Command("bash", "-c", setRuby)
 
 	if r.Error != nil {
 		fmt.Errorf("error installing rvm")

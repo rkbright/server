@@ -31,16 +31,18 @@ func TestInstallPackage(t *testing.T) {
 func TestInstallGem(t *testing.T) {
 	t.Parallel()
 	r := server.NewTestRunner()
-	err := r.InstallGem("bundler")
+	err := r.InstallGem("jekyll")
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = r.InstallGem("jekyll")
+	err = r.InstallGem("bundler")
 	if err != nil {
 		t.Fatal(err)
 	}
 	wantHistory := []string{
 		"sudo yum update -y",
+		"sudo yum install -y certbot",
+		"sudo yum install -y python2-certbot-apache",
 		"sudo yum install -y gcc-c++",
 		"sudo yum install -y patch",
 		"sudo yum install -y readline",
@@ -56,16 +58,18 @@ func TestInstallGem(t *testing.T) {
 		"sudo yum install -y libtool",
 		"sudo yum install -y bison",
 		"sudo yum install -y sqlite-devel",
-		"curl -sSL https://rvm.io/mpapis.asc | gpg2 --import - ",
-		"curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import - ",
-		"curl -L get.rvm.io | bash -s stable ",
-		"source /etc/profile.d/rvm.sh ",
-		"rvm reload ",
-		"rvm requirements run ",
-		"rvm install 2.7 ",
-		"rvm use 2.7 --default ",
-		"gem install bundler",
+		"bash -c curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -",
+		"bash -c curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -",
+		"bash -c curl -L get.rvm.io | bash -s stable",
+		"source $HOME/.rvm/scripts/rvm",
+		"rvm reload",
+		"rvm requirements run",
+		"rvm list known",
+		"rvm install 2.7",
+		"rvm list",
+		"bash -c rvm use 2.7 --default",
 		"gem install jekyll",
+		"gem install bundler",
 	}
 	if !cmp.Equal(wantHistory, r.History) {
 		t.Fatal(cmp.Diff(wantHistory, r.History))
