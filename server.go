@@ -94,16 +94,15 @@ func (r *Runner) EnsureRvmInstalled() error {
 	getRvm := "curl -L get.rvm.io | bash -s stable"
 	r.Command("bash", "-c", getRvm)
 
-	r.Command("source", "$HOME/.rvm/scripts/rvm")
+	r.Command("source", "$HOME/.rvm/scripts/rvm && exec bash")
 
 	r.Command("rvm", "reload")
 	r.Command("rvm", "requirements", "run")
 	r.Command("rvm", "list", "known")
 	r.Command("rvm", "install", "2.7")
 	r.Command("rvm", "list")
-
-	setRuby := "rvm use 2.7 --default"
-	r.Command("bash", "-c", setRuby)
+	r.Command("rvm", "alias", "create", "default", "2.7")
+	r.Command("rvm", "default")
 
 	if r.Error != nil {
 		fmt.Errorf("error installing rvm")
