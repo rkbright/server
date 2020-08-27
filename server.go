@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-const rvmDependencies string = "certbot python2-certbot-apache gcc-c++ patch readline readline-devel zlib zlib-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison sqlite-devel"
+const rvmDependencies string = "httpd certbot python2-certbot-apache gcc-c++ patch readline readline-devel zlib zlib-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison sqlite-devel"
 
 type Runner struct {
 	History      []string
@@ -94,16 +94,20 @@ func (r *Runner) EnsureRvmInstalled() error {
 	getRvm := "curl -L get.rvm.io | bash -s stable"
 	r.Command("bash", "-c", getRvm)
 
-	r.Command("source", "$HOME/.rvm/scripts/rvm")
+	r.Command("source", "$HOME/.rvm/scripts/rvm && exec bash")
 
 	r.Command("rvm", "reload")
 	r.Command("rvm", "requirements", "run")
 	r.Command("rvm", "list", "known")
 	r.Command("rvm", "install", "2.7")
 	r.Command("rvm", "list")
-
-	setRuby := "rvm use 2.7 --default"
-	r.Command("bash", "-c", setRuby)
+	r.Command("rvm", "alias", "create", "default", "2.7")
+	setRvmBashProfile := `echo -e "\n#set rvm\nif test -f ~/.rvm/scripts/rvm; then\n[ "$(type -t rvm)" = "function" ] || source ~/.rvm/scripts/rvm\nfi" >> ~/.bash_profile`
+	setRvmBashrc := `echo -e "\n#set rvm\nif test -f ~/.rvm/scripts/rvm; then\n[ "$(type -t rvm)" = "function" ] || source ~/.rvm/scripts/rvm\nfi" >> ~/.bashrc`
+	r.Command("bash", "-c", setRvmBashProfile)
+	r.Command("bash", "-c", setRvmBashrc)
+	r.Command("exec", "bash")
+	r.Command("rvm", "default")
 
 	if r.Error != nil {
 		fmt.Errorf("error installing rvm")

@@ -41,6 +41,7 @@ func TestInstallGem(t *testing.T) {
 	}
 	wantHistory := []string{
 		"sudo yum update -y",
+		"sudo yum install -y httpd",
 		"sudo yum install -y certbot",
 		"sudo yum install -y python2-certbot-apache",
 		"sudo yum install -y gcc-c++",
@@ -61,13 +62,17 @@ func TestInstallGem(t *testing.T) {
 		"bash -c curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -",
 		"bash -c curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -",
 		"bash -c curl -L get.rvm.io | bash -s stable",
-		"source $HOME/.rvm/scripts/rvm",
+		"source $HOME/.rvm/scripts/rvm && exec bash",
 		"rvm reload",
 		"rvm requirements run",
 		"rvm list known",
 		"rvm install 2.7",
 		"rvm list",
-		"bash -c rvm use 2.7 --default",
+		"rvm alias create default 2.7",
+		`bash -c echo -e "\n#set rvm\nif test -f ~/.rvm/scripts/rvm; then\n[ "$(type -t rvm)" = "function" ] || source ~/.rvm/scripts/rvm\nfi" >> ~/.bash_profile`,
+		`bash -c echo -e "\n#set rvm\nif test -f ~/.rvm/scripts/rvm; then\n[ "$(type -t rvm)" = "function" ] || source ~/.rvm/scripts/rvm\nfi" >> ~/.bashrc`,
+		"exec bash",
+		"rvm default",
 		"gem install jekyll",
 		"gem install bundler",
 	}
