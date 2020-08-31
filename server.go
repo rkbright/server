@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-const rvmDependencies string = "httpd certbot python2-certbot-apache gcc-c++ patch readline readline-devel zlib zlib-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison sqlite-devel"
+const rvmDependencies string = "httpd certbot python2-certbot-apache curl git-core gcc-c++ patch readline readline-devel zlib zlib-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison sqlite-devel"
 
 type Runner struct {
 	History      []string
@@ -85,29 +85,12 @@ func (r *Runner) InstallGem(p string) error {
 func (r *Runner) EnsureRvmInstalled() error {
 
 	r.InstallPackage(rvmDependencies)
-	getKey1 := "curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -"
-	r.Command("bash", "-c", getKey1)
-
-	getKey2 := "curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -"
-	r.Command("bash", "-c", getKey2)
-
-	getRvm := "curl -L get.rvm.io | bash -s stable"
-	r.Command("bash", "-c", getRvm)
-
-	r.Command("source", "$HOME/.rvm/scripts/rvm && exec bash")
-
-	r.Command("rvm", "reload")
-	r.Command("rvm", "requirements", "run")
-	r.Command("rvm", "list", "known")
-	r.Command("rvm", "install", "2.7")
-	r.Command("rvm", "list")
-	r.Command("rvm", "alias", "create", "default", "2.7")
-	setRvmBashProfile := `echo -e "\n#set rvm\nif test -f ~/.rvm/scripts/rvm; then\n[ "$(type -t rvm)" = "function" ] || source ~/.rvm/scripts/rvm\nfi" >> ~/.bash_profile`
-	setRvmBashrc := `echo -e "\n#set rvm\nif test -f ~/.rvm/scripts/rvm; then\n[ "$(type -t rvm)" = "function" ] || source ~/.rvm/scripts/rvm\nfi" >> ~/.bashrc`
-	r.Command("bash", "-c", setRvmBashProfile)
-	r.Command("bash", "-c", setRvmBashrc)
-	r.Command("exec", "bash")
-	r.Command("rvm", "default")
+	getRbenv := "curl -sL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash -"
+	r.Command("bash", "-c", getRbenv)
+	setBashrc := `echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> $HOME/.bashrc && echo 'eval "$(rbenv init -)"' >> $HOME/.bashrc && source $HOME/.bashrc`
+	r.Command("bash", "-c", setBashrc)
+	installRbenv := `rbenv install 2.7.0 && rbenv global 2.7.0`
+	r.Command("bash", "-c", installRbenv)
 
 	if r.Error != nil {
 		fmt.Errorf("error installing rvm")
