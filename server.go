@@ -88,7 +88,10 @@ func (r *Runner) EnsureRvmInstalled() error {
 	getRbenv := "curl -sL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash -"
 	r.Command("bash", "-c", getRbenv)
 	setBashrc := `echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> $HOME/.bashrc && echo 'eval "$(rbenv init -)"' >> $HOME/.bashrc && source $HOME/.bashrc`
-	r.Command("bash", "-c", setBashrc)
+	var match bool = false
+	if !match {
+		r.Command("bash", "-c", setBashrc)
+	}
 	installRbenv := `rbenv install 2.7.0 && rbenv global 2.7.0`
 	r.Command("bash", "-c", installRbenv)
 
