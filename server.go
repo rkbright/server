@@ -75,7 +75,8 @@ func (r *Runner) InstallGem(p string) error {
 		}
 		r.rvmInstalled = true
 	}
-	err := r.Command("gem", "install", p)
+	gemPath := "$HOME/.rbenv/shims/gem install " + p
+	err := r.Command("bash", "-c", gemPath)
 	if err != nil {
 		return err
 	}
@@ -92,7 +93,7 @@ func (r *Runner) EnsureRvmInstalled() error {
 	if !match {
 		r.Command("bash", "-c", setBashrc)
 	}
-	installRbenv := `rbenv install 2.7.0 && rbenv global 2.7.0`
+	installRbenv := `$HOME/.rbenv/bin/rbenv install 2.7.0 && $HOME/.rbenv/bin/rbenv global 2.7.0`
 	r.Command("bash", "-c", installRbenv)
 
 	if r.Error != nil {
