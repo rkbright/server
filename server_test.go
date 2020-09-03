@@ -63,9 +63,9 @@ func TestInstallGem(t *testing.T) {
 		"sudo yum install -y sqlite-devel",
 		"bash -c curl -sL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash -",
 		`bash -c echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> $HOME/.bashrc && echo 'eval "$(rbenv init -)"' >> $HOME/.bashrc && source $HOME/.bashrc`,
-		"bash -c rbenv install 2.7.0 && rbenv global 2.7.0",
-		"gem install jekyll",
-		"gem install bundler",
+		"bash -c $HOME/.rbenv/bin/rbenv install 2.7.0 && $HOME/.rbenv/bin/rbenv global 2.7.0",
+		"bash -c $HOME/.rbenv/shims/gem install jekyll",
+		"bash -c $HOME/.rbenv/shims/gem install bundler",
 	}
 	if !cmp.Equal(wantHistory, r.History) {
 		t.Fatal(cmp.Diff(wantHistory, r.History))

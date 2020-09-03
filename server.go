@@ -6,15 +6,15 @@ import (
 	"strings"
 )
 
-const rvmDependencies string = "httpd certbot python2-certbot-apache curl git-core gcc-c++ patch readline readline-devel zlib zlib-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison sqlite-devel"
+const rbenvDependencies string = "httpd certbot python2-certbot-apache curl git-core gcc-c++ patch readline readline-devel zlib zlib-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison sqlite-devel"
 
 type Runner struct {
-	History      []string
-	Output       string
-	Error        error
-	dryRun       bool
-	yumUpdated   bool
-	rvmInstalled bool
+	History        []string
+	Output         string
+	Error          error
+	dryRun         bool
+	yumUpdated     bool
+	rbenvInstalled bool
 }
 
 func NewRunner() *Runner {
@@ -68,12 +68,12 @@ func (r *Runner) EnsureYumUpdated() error {
 }
 
 func (r *Runner) InstallGem(p string) error {
-	if !r.rvmInstalled {
+	if !r.rbenvInstalled {
 		err := r.EnsureRvmInstalled()
 		if err != nil {
 			return err
 		}
-		r.rvmInstalled = true
+		r.rbenvInstalled = true
 	}
 	gemPath := "$HOME/.rbenv/shims/gem install " + p
 	err := r.Command("bash", "-c", gemPath)
@@ -85,14 +85,11 @@ func (r *Runner) InstallGem(p string) error {
 
 func (r *Runner) EnsureRvmInstalled() error {
 
-	r.InstallPackage(rvmDependencies)
+	r.InstallPackage(rbenvDependencies)
 	getRbenv := "curl -sL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash -"
 	r.Command("bash", "-c", getRbenv)
 	setBashrc := `echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> $HOME/.bashrc && echo 'eval "$(rbenv init -)"' >> $HOME/.bashrc && source $HOME/.bashrc`
-	var match bool = false
-	if !match {
-		r.Command("bash", "-c", setBashrc)
-	}
+	r.Command("bash", "-c", setBashrc)
 	installRbenv := `$HOME/.rbenv/bin/rbenv install 2.7.0 && $HOME/.rbenv/bin/rbenv global 2.7.0`
 	r.Command("bash", "-c", installRbenv)
 
