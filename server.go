@@ -6,7 +6,9 @@ import (
 	"strings"
 )
 
-const rbenvDependencies string = "httpd certbot python2-certbot-apache curl git-core gcc-c++ patch readline readline-devel zlib zlib-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison sqlite-devel"
+const jekyllDep string = "gcc-c++ patch readline readline-devel zlib zlib-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison sqlite-devel curl git-core"
+const apacheDep string = "httpd"
+const certbotDep string = "certbot python2-certbot-apache"
 
 type Runner struct {
 	History        []string
@@ -32,7 +34,6 @@ func (r *Runner) Command(command string, args ...string) error {
 	if r.dryRun {
 		return nil
 	}
-	//add error check
 	output, err := exec.Command(command, args...).CombinedOutput()
 	fmt.Println(string(output))
 	if err != nil {
@@ -85,11 +86,13 @@ func (r *Runner) InstallGem(p string) error {
 
 func (r *Runner) EnsureRvmInstalled() error {
 
-	r.InstallPackage(rbenvDependencies)
+	r.InstallPackage(jekyllDep)
+	r.InstallPackage(apacheDep)
+	r.InstallPackage(certbotDep)
 	getRbenv := "curl -sL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash -"
 	r.Command("bash", "-c", getRbenv)
-	setBashrc := `echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> $HOME/.bashrc && echo 'eval "$(rbenv init -)"' >> $HOME/.bashrc && source $HOME/.bashrc`
-	r.Command("bash", "-c", setBashrc)
+	// setBashrc := `echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> $HOME/.bashrc && echo 'eval "$(rbenv init -)"' >> $HOME/.bashrc && source $HOME/.bashrc`
+	// r.Command("bash", "-c", setBashrc)
 	installRbenv := `$HOME/.rbenv/bin/rbenv install 2.7.0 && $HOME/.rbenv/bin/rbenv global 2.7.0`
 	r.Command("bash", "-c", installRbenv)
 
