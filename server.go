@@ -92,11 +92,11 @@ func (r *Runner) EnsureRbenvInstalled() error {
 		return err
 	}
 
-	// r.SetBashrc = `echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> $HOME/.bashrc && echo 'eval "$(rbenv init -)"' >> $HOME/.bashrc && source $HOME/.bashrc`
-	// err = r.Command("bash", "-c", r.SetBashrc)
-	// if err != nil {
-	// 	return err
-	// }
+	r.SetBashrc = `echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> $HOME/.bashrc && echo 'eval "$(rbenv init -)"' >> $HOME/.bashrc && source $HOME/.bashrc`
+	err = r.Command("bash", "-c", r.SetBashrc)
+	if err != nil {
+		return err
+	}
 
 	r.InstallRbenv = `$HOME/.rbenv/bin/rbenv install 2.7.0 && $HOME/.rbenv/bin/rbenv global 2.7.0`
 	err = r.Command("bash", "-c", r.InstallRbenv)
