@@ -2,6 +2,8 @@
 
 **PLEASE NOTE**: this package was build for yum-based linux distributions and was tested on RHEL and CentOS 7 operating systems. I do plan on extending the package to Debian-based systems in the future. Please feel free to add the functionality! 
 
+**IN ADDITION**: you will need to run the program from an account with elevated privileges, i.e., able to run sudo commands. Do not run from the root account.  
+
 1. **Install git** 
 
     `sudo yum install git -y`
