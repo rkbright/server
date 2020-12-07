@@ -86,8 +86,8 @@ func (r *Runner) EnsureRbenvInstalled() error {
 	r.InstallPackage(certbotDep)
 	r.rbenvInstalled = true
 
-	getRbenv := "curl -sL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash -"
-	err := r.Command("bash", "-c", getRbenv)
+	r.GetRbenv = "curl -sL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash -"
+	err := r.Command("bash", "-c", r.GetRbenv)
 	if err != nil {
 		return err
 	}
