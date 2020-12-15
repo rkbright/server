@@ -11,10 +11,6 @@ const jekyllDep string = "gcc-c++ patch readline readline-devel zlib zlib-devel 
 const apacheDep string = "httpd"
 const certbotDep string = "certbot python2-certbot-apache"
 
-//group packages
-//add doc comments
-//look at comments on pkg.go.dev
-
 type Runner struct {
 	History        []string
 	Output         string
@@ -42,7 +38,7 @@ func (r *Runner) Command(command string, args ...string) error {
 	if r.dryRun {
 		return nil
 	}
-	//add integration test, use a build tag
+
 	output, err := exec.Command(command, args...).CombinedOutput()
 	log.Println(string(output))
 	if err != nil {
