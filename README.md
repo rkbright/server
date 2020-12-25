@@ -59,6 +59,10 @@ What will be installed?
 
 [Jekyll](https://jekyllrb.com/) is a simple, blog-aware, static site generator for personal, project, or organization sites. 
 
+# GoDoc
+
+Link to [GoDoc page](https://godoc.org/github.com/rkbright/jekyll-server-build)
+
 # Other Resources
 
 I know of only one other repo that tries to automate the Jekyll install 
