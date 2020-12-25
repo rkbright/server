@@ -26,7 +26,7 @@ type Runner struct {
 	rbenvInstalled bool
 }
 
-// NewRunner returns a pointer to Runner
+// NewRunner returns a referecne to Runner
 func NewRunner() *Runner {
 	return &Runner{}
 }
