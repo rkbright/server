@@ -1,3 +1,4 @@
+//Package server automates the installation of the Jekyll static website generator
 package server
 
 import (
@@ -7,10 +8,12 @@ import (
 	"strings"
 )
 
+//Install dependencies for jekyll, apache and lets encrypt
 const jekyllDep string = "gcc-c++ patch readline readline-devel zlib zlib-devel libffi-devel openssl-devel make bzip2 autoconf automake libtool bison sqlite-devel curl git-core"
 const apacheDep string = "httpd"
 const certbotDep string = "certbot python2-certbot-apache"
 
+// Runner is a runner object with exportable fields
 type Runner struct {
 	History        []string
 	Output         string
@@ -23,16 +26,19 @@ type Runner struct {
 	rbenvInstalled bool
 }
 
+// NewRunner returns a pointer to Runner
 func NewRunner() *Runner {
 	return &Runner{}
 }
 
+// NewTestRunner returns an instance of Runner for testing
 func NewTestRunner() *Runner {
 	r := NewRunner()
-	r.dryRun = true
+	r.dryRun = true //toggle to false to execute code locally
 	return r
 }
 
+// Command reads from runner and takes one or more commandline arguments
 func (r *Runner) Command(command string, args ...string) error {
 	r.History = append(r.History, fmt.Sprintf("%s %s", command, strings.Join(args, " ")))
 	if r.dryRun {
@@ -47,18 +53,20 @@ func (r *Runner) Command(command string, args ...string) error {
 	return nil
 }
 
+// InstallPackage reads from runner and installs dependency packages
 func (r *Runner) InstallPackage(p string) error {
-	err := r.EnsureYumUpdated()
+	err := r.EnsureYumUpdated() // update yum before installing packages
 	if err != nil {
 		return err
 	}
-	depPkgs := strings.Fields(p)
+	depPkgs := strings.Fields(p) // Loop through dependency packages
 	for _, pkgs := range depPkgs {
 		err = r.Command("sudo", "yum", "install", "-y", pkgs)
 	}
 	return err
 }
 
+// EnsureYumUpdated updates yum packages
 func (r *Runner) EnsureYumUpdated() error {
 	if r.yumUpdated {
 		return nil
@@ -67,12 +75,16 @@ func (r *Runner) EnsureYumUpdated() error {
 	return r.Command("sudo", "yum", "update", "-y")
 }
 
+// InstallGem reads from runner, checks if dependencies
+// are installed, and completes the install of jekyll and bundler
 func (r *Runner) InstallGem(p string) error {
 	r.EnsureRbenvInstalled()
 	gemPath := "$HOME/.rbenv/shims/gem install " + p
 	return r.Command("bash", "-c", gemPath)
 }
 
+// EnsureRbenvInstalled reads from runner and
+// installs dependencies
 func (r *Runner) EnsureRbenvInstalled() error {
 	if r.rbenvInstalled {
 		return nil
