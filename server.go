@@ -13,7 +13,7 @@ const jekyllDep string = "gcc-c++ patch readline readline-devel zlib zlib-devel 
 const apacheDep string = "httpd"
 const certbotDep string = "certbot python2-certbot-apache"
 
-// Runner is a runner object with exportable fields
+// Runner is a runner object with exportable and unexportable names
 type Runner struct {
 	History        []string
 	Output         string
