@@ -13,7 +13,7 @@ const jekyllDep string = "gcc-c++ patch readline readline-devel zlib zlib-devel 
 const apacheDep string = "httpd"
 const certbotDep string = "certbot python2-certbot-apache"
 
-// Runner is a runner object with exportable and unexportable names
+// Runner is a runner object with exportable and nonexportable names
 type Runner struct {
 	History        []string
 	Output         string
@@ -26,7 +26,7 @@ type Runner struct {
 	rbenvInstalled bool
 }
 
-// NewRunner returns a referecne to Runner
+// NewRunner returns a reference to Runner
 func NewRunner() *Runner {
 	return &Runner{}
 }
