@@ -1,6 +1,6 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/rkbright/server)](https://goreportcard.com/badge/github.com/rkbright/server)
 
-# How can I use `server?
+# How can I use `server`?
 
 **PLEASE NOTE**: this package was build for yum-based linux distributions and was tested on RHEL and CentOS 7 operating systems. I do plan on extending the package to Debian-based systems in the future. Please feel free to add the functionality! 
 
