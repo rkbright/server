@@ -1,4 +1,4 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/rkbright/server)](https://goreportcard.com/badge/github.com/rkbright/server)
+[![GoDoc](https://godoc.org/github.com/rkbright/server?status.png)](http://godoc.org/github.com/rkbright/server)[![Go Report Card](https://goreportcard.com/badge/github.com/rkbright/server)](https://goreportcard.com/badge/github.com/rkbright/server)
 
 # How can I use `server`?
 
@@ -63,7 +63,7 @@ What will be installed?
 
 # GoDoc
 
-Link to [GoDoc page](https://godoc.org/github.com/rkbright/server)
+Link to [GoDoc page](https://pkg.go.dev/github.com/rkbright/server)
 
 # Other Resources
 
