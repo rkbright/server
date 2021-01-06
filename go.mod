@@ -1,4 +1,4 @@
-module server
+module github.com/rkbright/server
 
 go 1.14
 
