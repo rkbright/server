@@ -47,7 +47,7 @@ That's it! It takes a few minutes to run yum update and download the dependencie
 
 # What is `server`? 
 
-`Jekyllizer` is a Go package that automates the build process to support Jekyll-based static websites.  
+`server` is a Go package that automates the build process to support Jekyll-based static websites.  
 
 What will be installed?
 * ruby version 2.7 (you can update the version in the `server.go` file)
