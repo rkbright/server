@@ -1,6 +1,6 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/rkbright/jekyllizer)](https://goreportcard.com/report/github.com/rkbright/jekyllizer)
+[![Go Report Card](https://goreportcard.com/badge/github.com/rkbright/server)](https://goreportcard.com/badge/github.com/rkbright/server)
 
-# How can I use `Jekyllizer`?
+# How can I use `server?
 
 **PLEASE NOTE**: this package was build for yum-based linux distributions and was tested on RHEL and CentOS 7 operating systems. I do plan on extending the package to Debian-based systems in the future. Please feel free to add the functionality! 
 
@@ -34,18 +34,18 @@
 
 3. **Then clone the repo into your $HOME directory**
 
-    `git clone https://github.com/rkbright/jekyllizer.git`
+    `git clone https://github.com/rkbright/server.git`
 
 
 4. Change directories 
 
-    `cd jekyllizer`
+    `cd server`
 
     Then run the program `go run cmd/main.go`
 
 That's it! It takes a few minutes to run yum update and download the dependencies, especially for ephemeral VMs that are newly provisioned. So feel free to grab a cup of your favorite beverage.
 
-# What is `Jekyllizer`? 
+# What is `server`? 
 
 `Jekyllizer` is a Go package that automates the build process to support Jekyll-based static websites.  
 
@@ -63,7 +63,7 @@ What will be installed?
 
 # GoDoc
 
-Link to [GoDoc page](https://godoc.org/github.com/rkbright/jekyllizer)
+Link to [GoDoc page](https://godoc.org/github.com/rkbright/server)
 
 # Other Resources
 
