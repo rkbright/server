@@ -36,6 +36,14 @@
 
     `git clone https://github.com/rkbright/server.git`
 
+    Or you can import using go
+
+    `go get github.com/rkbright/server`
+
+    the above will install the package in: 
+    
+    `$GOPATH/go/src/github.com/rkbright/server`
+
 
 4. Change directories 
 
