@@ -49,6 +49,10 @@
 
     `cd server`
 
+    or 
+
+    `cd github.com/rkbright/server`
+
     Then run the program `go run cmd/main.go`
 
 That's it! It takes a few minutes to run yum update and download the dependencies, especially for ephemeral VMs that are newly provisioned. So feel free to grab a cup of your favorite beverage.
